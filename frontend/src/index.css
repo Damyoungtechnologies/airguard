@@ -1,1 +1,65 @@
 @import "tailwindcss";
+
+/* Leaflet Custom Tooltip Overrides */
+.custom-tooltip {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  backdrop-filter: blur(4px) !important;
+  border-radius: 8px !important;
+  color: white !important;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 4px 10px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5) !important;
+  z-index: 9999 !important;
+}
+
+.custom-tooltip::before {
+  display: none !important; /* Hides the default leaflet tooltip arrow */
+}
+
+/* Custom Leaflet Popup Styling */
+.custom-popup .leaflet-popup-content-wrapper {
+  background: rgba(15, 23, 42, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px !important;
+  color: white !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+  padding: 0 !important;
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 12px !important;
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5) !important;
+}
+
+.custom-popup .leaflet-popup-close-button {
+  color: #94a3b8 !important;
+  padding: 8px !important;
+  font-weight: bold !important;
+}
+
+.custom-popup .leaflet-popup-close-button:hover {
+  color: white !important;
+}
+
+/* Glowing Circle Markers */
+@keyframes pulse-glow {
+  0% { filter: drop-shadow(0px 0px 3px currentColor); }
+  50% { filter: drop-shadow(0px 0px 15px currentColor); }
+  100% { filter: drop-shadow(0px 0px 3px currentColor); }
+}
+
+.glowing-circle {
+  animation: pulse-glow 2s infinite ease-in-out;
+}
