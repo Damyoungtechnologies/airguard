@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { API_BASE_URL } from './config'
 import { useForm, ValidationError } from '@formspree/react'
 import Header from './components/Header'
 import MainContent from './components/MainContent'
@@ -127,7 +128,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch('${import.meta.env.VITE_API_URL || " http://localhost:8000\}/api/locations')
+    fetch(`${API_BASE_URL}/api/locations`)
       .then(res => res.json())
       .then(data => setLocations(data))
       .catch(err => console.error("Error fetching locations data:", err));

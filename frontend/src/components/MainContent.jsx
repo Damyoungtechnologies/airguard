@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Wind, Home, Map, Activity, CloudFog, Factory, Sun } from 'lucide-react';
+import { MapPin, Wind, Activity, ArrowRight, ShieldAlert, Sparkles, TrendingUp, AlertTriangle, CloudRain, Clock, Shield, Home, Map, CloudFog, Factory, Sun } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 import { MapContainer, TileLayer, CircleMarker } from 'react-leaflet';
 
 function LeftSection({ selectedRegion, currentLoc }) {
@@ -8,7 +9,7 @@ function LeftSection({ selectedRegion, currentLoc }) {
 
   useEffect(() => {
     const regionToFetch = selectedRegion === 'All' ? 'Ikeja' : selectedRegion;
-    fetch(`${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/health-tips/${regionToFetch}`)
+    fetch(`${API_BASE_URL}/api/health-tips/${regionToFetch}`)
       .then(res => res.json())
       .then(data => setTips(data.tips || []))
       .catch(err => console.error("Error fetching tips:", err));
@@ -102,8 +103,8 @@ function RightSection({ selectedRegion }) {
     setLoading(true);
     
     Promise.all([
-      fetch(`${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/historical/${regionToFetch}`).then(res => res.json()),
-      fetch(`${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/forecast/${regionToFetch}`).then(res => res.json())
+      fetch(`${API_BASE_URL}/api/historical/${regionToFetch}`).then(res => res.json()),
+      fetch(`${API_BASE_URL}/api/forecast/${regionToFetch}`).then(res => res.json())
     ])
     .then(([histData, foreData]) => {
       setHistoricalData(histData);

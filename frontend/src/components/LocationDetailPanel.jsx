@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Activity, Users, Info, Wind } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, ReferenceLine, Legend } from 'recharts';
 
 export default function LocationDetailPanel({ location, onClose }) {
@@ -12,8 +13,8 @@ export default function LocationDetailPanel({ location, onClose }) {
     setLoading(true);
 
     Promise.all([
-      fetch(`${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/historical/${location.name}?timeframe=${timeframe}`).then(res => res.json()),
-      fetch(`${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/forecast/${location.name}?timeframe=${timeframe}`).then(res => res.json())
+      fetch(`${API_BASE_URL}/api/historical/${location.name}?timeframe=${timeframe}`).then(res => res.json()),
+      fetch(`${API_BASE_URL}/api/forecast/${location.name}?timeframe=${timeframe}`).then(res => res.json())
     ])
     .then(([histData, forecastData]) => {
       // Normalize values to % of safe limits

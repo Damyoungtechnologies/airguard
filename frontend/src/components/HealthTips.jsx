@@ -8,6 +8,7 @@ import {
   Sparkles,
   MapPin,
 } from "lucide-react";
+import { API_BASE_URL } from "../config";
 
 export default function HealthTips({ selectedRegion }) {
   const [tipsData, setTipsData] = useState({ status: "Loading...", tips: [] });
@@ -16,7 +17,7 @@ export default function HealthTips({ selectedRegion }) {
   useEffect(() => {
     const regionToFetch =
       !selectedRegion || selectedRegion === "All" ? "Ikeja" : selectedRegion;
-    fetch(`${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/health-tips/${regionToFetch}`)
+    fetch(`${API_BASE_URL}/api/health-tips/${regionToFetch}`)
       .then((res) => res.json())
       .then((data) => setTipsData(data))
       .catch((err) => console.error("Error fetching tips:", err));
