@@ -16,7 +16,7 @@ export default function HealthTips({ selectedRegion }) {
   useEffect(() => {
     const regionToFetch =
       !selectedRegion || selectedRegion === "All" ? "Ikeja" : selectedRegion;
-    fetch(`http://localhost:8000/api/health-tips/${regionToFetch}`)
+    fetch(`${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/health-tips/${regionToFetch}`)
       .then((res) => res.json())
       .then((data) => setTipsData(data))
       .catch((err) => console.error("Error fetching tips:", err));
@@ -72,7 +72,7 @@ export default function HealthTips({ selectedRegion }) {
               className={`relative w-32 h-32 rounded-full border-[6px] border-${c}-400/60 bg-slate-950/50 flex flex-col items-center justify-center shadow-lg shadow-${c}-500/20 backdrop-blur-md`}
             >
               <span
-                className={`text-2xl font-black text-${c}-300 tracking-tight drop-shadow-md`}
+                className={`text-xl font-bold text-${c}-300 tracking-tight drop-shadow-md`}
               >
                 {tipsData.status}
               </span>
@@ -105,63 +105,110 @@ export default function HealthTips({ selectedRegion }) {
           >
             <option value="All">Select Recommendation (All)</option>
             <option value="Policy">Government (Policy)</option>
-            <option value="Individual">Individual</option>
+            <option value="Individual">Individual Citizens</option>
+            <option value="Medical">Medical Doctors</option>
+            <option value="Event Planners">Event Planners</option>
+            <option value="News">News Forecasters</option>
+            <option value="International">International Bodies</option>
           </select>
         </div>
       </div>
       {/* Bottom Grid: Action Cards - Glassy Restored */}
-      <div className="p-4 sm:p-6 bg-slate-900/40 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl grid grid-cols-1 md:grid-cols-2 gap-8 w-fit mx-auto">
-        {tipsData.tips.length === 0 ? (
-          <p className="text-white w-full text-center">
-            Analyzing multi-pollutant forecast data...
-          </p>
-        ) : tipsData.tips.filter(
-            (item) => filterType === "All" || item.type === filterType,
-          ).length === 0 ? (
-          <p className="text-white w-full text-center">
-            No {filterType.toLowerCase()} tips available for this forecast.
-          </p>
-        ) : (
-          tipsData.tips
-            .filter((item) => filterType === "All" || item.type === filterType)
-            .map((item, idx) => {
-              const isPolicy = item.type === "Policy";
-              return (
-                <div
-                  key={idx}
-                  className={`w-full max-w-sm space-y-3 group ${isPolicy ? "bg-amber-900/20 border-amber-500/20 hover:bg-amber-900/30" : "bg-white/5 border-white/5 hover:bg-white/10"} p-4 rounded-2xl border transition-all shadow-inner`}
-                >
-                  <div className="flex items-center justify-between">
-                    {/* Circular Icon */}
-                    <div
-                      className={`w-10 h-10 rounded-full bg-${c}-900/40 border border-${c}-500/40 flex items-center justify-center text-${c}-300 group-hover:scale-110 transition-transform shadow-md`}
-                    >
-                      <ShieldAlert className="w-5 h-5" />
-                    </div>
-                    {/* Badge */}
-                    <span
-                      className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-md border ${isPolicy ? "bg-amber-500/20 text-amber-300 border-amber-500/40" : "bg-slate-800 text-slate-300 border-white/10"}`}
-                    >
-                      {item.type}
-                    </span>
-                  </div>
+      {(() => {
+        const filteredTips = tipsData.tips.filter(
+          (item) => filterType === "All" || item.type === filterType,
+        );
+        const gridCols =
+          filteredTips.length === 1 ? "md:grid-cols-1" : "md:grid-cols-2";
 
-                  {/* Title & Description */}
-                  <div>
-                    <h3
-                      className={`text-sm font-bold text-white group-hover:text-${c}-300 transition-colors drop-shadow-sm`}
-                    >
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-slate-300 mt-2 leading-relaxed font-medium">
-                      {item.desc}
-                    </p>
+        return (
+          <div
+            className={`p-4 sm:p-6 bg-slate-900/40 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl grid grid-cols-1 ${gridCols} gap-8 w-fit mx-auto`}
+          >
+            {tipsData.tips.length === 0 ? (
+              <p className="text-white w-full text-center">
+                Analyzing multi-pollutant forecast data...
+              </p>
+            ) : filteredTips.length === 0 ? (
+              <p className="text-white w-full text-center">
+                No {filterType.toLowerCase()} tips available for this forecast.
+              </p>
+            ) : (
+              filteredTips.map((item, idx) => {
+                const isPolicy = item.type === "Policy";
+                const isMedical = item.type === "Medical";
+                const isEvent = item.type === "Event Planners";
+                const isNews = item.type === "News";
+                const isIntl = item.type === "International";
+
+                let cardBg = "bg-white/5 border-white/5 hover:bg-white/10";
+                let badgeStyle = "bg-slate-800 text-slate-300 border-white/10";
+
+                if (isPolicy) {
+                  cardBg =
+                    "bg-amber-900/20 border-amber-500/20 hover:bg-amber-900/30";
+                  badgeStyle =
+                    "bg-amber-500/20 text-amber-300 border-amber-500/40";
+                } else if (isMedical) {
+                  cardBg =
+                    "bg-rose-900/20 border-rose-500/20 hover:bg-rose-900/30";
+                  badgeStyle =
+                    "bg-rose-500/20 text-rose-300 border-rose-500/40";
+                } else if (isEvent) {
+                  cardBg =
+                    "bg-emerald-900/20 border-emerald-500/20 hover:bg-emerald-900/30";
+                  badgeStyle =
+                    "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
+                } else if (isNews) {
+                  cardBg =
+                    "bg-blue-900/20 border-blue-500/20 hover:bg-blue-900/30";
+                  badgeStyle =
+                    "bg-blue-500/20 text-blue-300 border-blue-500/40";
+                } else if (isIntl) {
+                  cardBg =
+                    "bg-purple-900/20 border-purple-500/20 hover:bg-purple-900/30";
+                  badgeStyle =
+                    "bg-purple-500/20 text-purple-300 border-purple-500/40";
+                }
+
+                return (
+                  <div
+                    key={idx}
+                    className={`w-full max-w-sm space-y-3 group ${cardBg} p-4 rounded-2xl border transition-all shadow-inner`}
+                  >
+                    <div className="flex items-center justify-between">
+                      {/* Circular Icon */}
+                      <div
+                        className={`w-10 h-10 rounded-full bg-${c}-900/40 border border-${c}-500/40 flex items-center justify-center text-${c}-300 group-hover:scale-110 transition-transform shadow-md`}
+                      >
+                        <ShieldAlert className="w-5 h-5" />
+                      </div>
+                      {/* Badge */}
+                      <span
+                        className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-md border ${badgeStyle}`}
+                      >
+                        {item.type}
+                      </span>
+                    </div>
+
+                    {/* Title & Description */}
+                    <div>
+                      <h3
+                        className={`text-sm font-bold text-white group-hover:text-${c}-300 transition-colors drop-shadow-sm`}
+                      >
+                        {item.title}
+                      </h3>
+                      <p className="text-xs text-slate-300 mt-2 leading-relaxed font-medium">
+                        {item.desc}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              );
-            })
-        )}
-      </div>
+                );
+              })
+            )}
+          </div>
+        );
+      })()}
     </div>
   );
 }

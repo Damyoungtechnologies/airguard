@@ -10,7 +10,7 @@ export default function MapView() {
   
   // Fetch real locations from the FastAPI backend on mount
   useEffect(() => {
-    fetch('http://localhost:8000/api/locations')
+    fetch('${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/locations')
       .then(res => res.json())
       .then(data => setLocations(data))
       .catch(err => console.error("Error fetching locations data:", err));

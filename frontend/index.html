@@ -4,9 +4,35 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>AirGuard</title>
+    <style>
+      #preloader {
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        background-color: #020617; /* slate-950 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+      }
+      #preloader img {
+        width: 80px;
+        height: 80px;
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.7; }
+      }
+    </style>
   </head>
   <body>
+    <div id="preloader">
+      <img src="/favicon.svg" alt="Loading AirGuard..." />
+      <h2 style="color: #34d399; font-family: sans-serif; margin-top: 20px; letter-spacing: 2px;">AIRGUARD</h2>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

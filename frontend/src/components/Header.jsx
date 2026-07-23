@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Clock, ChevronDown, Activity } from 'lucide-react';
 
 export default function Header({ locations, selectedRegion, onSelectRegion, hash }) {
   // Helper to determine active tab class
   const activeClass = "text-emerald-400 border-b-2 border-emerald-400 pb-1";
   const inactiveClass = "text-slate-300 hover:text-white transition-colors border-b-2 border-transparent pb-1";
+
+  const [timeWAT, setTimeWAT] = useState("");
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date();
+      // UTC time in ms
+      const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+      // WAT is UTC+1 (3600000 ms)
+      const watMs = utcMs + 3600000;
+      const watTime = new Date(watMs);
+      setTimeWAT(watTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + " WAT");
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 flex flex-col md:flex-row items-center justify-between px-6 py-4 bg-slate-950/80 backdrop-blur-2xl border-b border-white/10 text-slate-200 gap-4 shadow-2xl pointer-events-auto">
@@ -45,14 +60,23 @@ export default function Header({ locations, selectedRegion, onSelectRegion, hash
         </a>
       </nav>
 
-      {/* Action Icons */}
-      <div className="hidden md:flex items-center space-x-3 text-slate-300">
-        <a href="#map" className={`p-2 rounded-full transition-all border shadow-lg backdrop-blur-md flex items-center justify-center ${hash === '#map' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-white/5 border-white/10 hover:bg-white/10'}`}>
-          <MapPin className="w-4 h-4" />
-        </a>
-        <a href="#dashboard" className={`p-2 rounded-full transition-all border shadow-lg backdrop-blur-md flex items-center justify-center ${hash === '#dashboard' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-white/5 border-white/10 hover:bg-white/10'}`}>
-          <Clock className="w-4 h-4" />
-        </a>
+      {/* Clock & Action Icons */}
+      <div className="hidden md:flex items-center space-x-6 text-slate-300">
+        
+        {/* Live WAT Clock */}
+        <div className="flex items-center gap-2 bg-slate-900/60 border border-slate-700/50 px-3 py-1.5 rounded-full shadow-inner font-mono text-xs tracking-wider text-emerald-400">
+          <Clock className="w-3.5 h-3.5" />
+          <span>{timeWAT || "Loading..."}</span>
+        </div>
+        
+        <div className="flex items-center space-x-3">
+          <a href="#map" className={`p-2 rounded-full transition-all border shadow-lg backdrop-blur-md flex items-center justify-center ${hash === '#map' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-white/5 border-white/10 hover:bg-white/10'}`}>
+            <MapPin className="w-4 h-4" />
+          </a>
+          <a href="#dashboard" className={`p-2 rounded-full transition-all border shadow-lg backdrop-blur-md flex items-center justify-center ${hash === '#dashboard' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-white/5 border-white/10 hover:bg-white/10'}`}>
+            <Clock className="w-4 h-4" />
+          </a>
+        </div>
       </div>
     </header>
   );

@@ -113,11 +113,21 @@ function App() {
   useEffect(() => {
     const onHashChange = () => setHash(window.location.hash || '#dashboard');
     window.addEventListener('hashchange', onHashChange);
+    
+    // Hide the preloader when React finishes mounting
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      preloader.style.opacity = '0';
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500);
+    }
+    
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/locations')
+    fetch('${import.meta.env.VITE_API_URL || " http://localhost:8000\}/api/locations')
       .then(res => res.json())
       .then(data => setLocations(data))
       .catch(err => console.error("Error fetching locations data:", err));

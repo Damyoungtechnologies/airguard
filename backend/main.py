@@ -251,7 +251,8 @@ def get_forecast(region_name: str, timeframe: str = "hourly"):
     current_hum = last_row['Humidity_pct']
     current_wind = last_row['Wind_Speed_kmh']
     
-    raw_predictions = []
+    # Build feature batch
+    batch_features = []
     
     for step in range(steps):
         current_hour += 1
@@ -259,22 +260,26 @@ def get_forecast(region_name: str, timeframe: str = "hourly"):
             current_hour = 0
             current_day = (current_day + 1) % 7
             
-        new_step_df = pd.DataFrame(
-            [[current_lat, current_lng, current_month, current_day, current_hour, current_temp, current_hum, current_wind]], 
-            columns=['Latitude', 'Longitude', 'Month', 'Day_of_Week', 'Hour', 'Temperature_C', 'Humidity_pct', 'Wind_Speed_kmh']
-        )
-        scaled_step = scaler_X.transform(new_step_df)
+        batch_features.append([
+            current_lat, current_lng, current_month, current_day, current_hour, 
+            current_temp, current_hum, current_wind
+        ])
         
-        scaled_pred = ml_model.predict(scaled_step)[0]
-        actual_pred = scaler_y.inverse_transform([scaled_pred])[0]
-        
+    # Predict entirely in a single batch (Massive Optimization)
+    batch_df = pd.DataFrame(batch_features, columns=['Latitude', 'Longitude', 'Month', 'Day_of_Week', 'Hour', 'Temperature_C', 'Humidity_pct', 'Wind_Speed_kmh'])
+    scaled_batch = scaler_X.transform(batch_df)
+    scaled_preds = ml_model.predict(scaled_batch)
+    actual_preds = scaler_y.inverse_transform(scaled_preds)
+    
+    raw_predictions = []
+    for step in range(steps):
         raw_predictions.append({
-            "hour": current_hour,
-            "overall": actual_pred[4],
-            "CO2": actual_pred[0],
-            "CO": actual_pred[1],
-            "CH4": actual_pred[2],
-            "CFCs": actual_pred[3]
+            "hour": batch_features[step][4], # current_hour
+            "overall": actual_preds[step][4],
+            "CO2": actual_preds[step][0],
+            "CO": actual_preds[step][1],
+            "CH4": actual_preds[step][2],
+            "CFCs": actual_preds[step][3]
         })
         
     wat_tz = timezone(timedelta(hours=1))
@@ -385,14 +390,34 @@ def get_health_tips(region_name: str):
             "desc": f"Unusually high methane predicted ({round(max_ch4, 1)} ppm, Limit: 1.8 ppm), possibly from local landfills or gas leaks. Report strong odors to authorities."
         })
         
-    # Fallbacks for very clean days
-    if len(tips) < 2:
+    # 3. Medical Doctors
+    if max_co > 5.0 or max_ch4 > 1.8:
         tips.append({
-            "type": "Individual", "title": "Optimal Air Quality", "icon": "heart",
-            "desc": f"Forecasts indicate {region_name} will enjoy safe air quality today. Excellent time for outdoor community activities!"
+            "type": "Medical", "title": "Respiratory Risk Warning", "icon": "heart",
+            "desc": f"Advise asthma and COPD patients in {region_name} to stay indoors. Forecasted pollutants (CO: {round(max_co, 1)} ppm, CH4: {round(max_ch4, 1)} ppm) may trigger severe respiratory distress."
+        })
+        
+    # 4. Event & Outdoor Planners
+    if max_co2 > 800 or max_co > 7.0:
+        tips.append({
+            "type": "Event Planners", "title": "Outdoor Event Hazard", "icon": "wind",
+            "desc": f"Air quality will be poor tomorrow. Planners should consider rescheduling marathons or prolonged outdoor gatherings in {region_name}."
+        })
+        
+    # 5. News Forecasters
+    tips.append({
+        "type": "News", "title": "Daily Pollutant Forecast", "icon": "wind",
+        "desc": f"Tomorrow's forecast for {region_name}: CO2 peaking at {round(max_co2, 0)} ppm and CO at {round(max_co, 1)} ppm. Broadcast this alongside standard weather updates to warn citizens."
+    })
+    
+    # 6. International Bodies
+    if max_cfcs > 0 or max_ch4 > 1.8:
+        tips.append({
+            "type": "International", "title": "Climate Treaty Alert", "icon": "globe",
+            "desc": f"Greenhouse gases detected (CFCs: {round(max_cfcs, 1)} ppt, Methane: {round(max_ch4, 1)} ppm). Data is logged for urban sustainability and carbon footprint tracking in West Africa."
         })
         
     return {
         "status": "Severe" if (max_co > 10 or max_co2 > 1200) else "High" if (max_co > 8 or max_co2 > 900) else "Moderate",
-        "tips": tips[:5] # Return top 5 most relevant tips
+        "tips": tips[:8] # Return top 8 most relevant tips
     }

@@ -8,7 +8,7 @@ function LeftSection({ selectedRegion, currentLoc }) {
 
   useEffect(() => {
     const regionToFetch = selectedRegion === 'All' ? 'Ikeja' : selectedRegion;
-    fetch(`http://localhost:8000/api/health-tips/${regionToFetch}`)
+    fetch(`${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/health-tips/${regionToFetch}`)
       .then(res => res.json())
       .then(data => setTips(data.tips || []))
       .catch(err => console.error("Error fetching tips:", err));
@@ -102,8 +102,8 @@ function RightSection({ selectedRegion }) {
     setLoading(true);
     
     Promise.all([
-      fetch(`http://localhost:8000/api/historical/${regionToFetch}`).then(res => res.json()),
-      fetch(`http://localhost:8000/api/forecast/${regionToFetch}`).then(res => res.json())
+      fetch(`${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/historical/${regionToFetch}`).then(res => res.json()),
+      fetch(`${import.meta.env.VITE_API_URL || \http://localhost:8000\}/api/forecast/${regionToFetch}`).then(res => res.json())
     ])
     .then(([histData, foreData]) => {
       setHistoricalData(histData);
