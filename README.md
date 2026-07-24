@@ -1,109 +1,78 @@
-# AirGuard
+# 🌍 AirGuard
 
-AirGuard is an air quality monitoring and prediction app. A FastAPI backend serves a machine-learning model (trained with scikit-learn) to score or forecast air quality, and a React frontend visualizes the results on an interactive map heatmap and charts.
+> **AI-Powered Air Quality Forecasting & Environmental Decision Support Platform**
 
-> This README is based on the project's dependencies and folder structure (`backend/`, `frontend/`, `airguard.ipynb`). Update the sections below with specifics — exact endpoints, data sources, and model details — as needed.
+AirGuard is an intelligent environmental monitoring and forecasting platform that uses Artificial Intelligence and Machine Learning to predict harmful air emissions before they occur.
 
-## Features
+The platform was developed in response to the growing global health crisis caused by air pollution, which contributes to millions of premature deaths each year and increases the prevalence of respiratory diseases, cardiovascular disorders, and long-term environmental degradation.
 
-- **Air quality predictions** served via a FastAPI backend using a trained scikit-learn model (loaded with `joblib`)
-- **Interactive map** with heatmap overlays (Leaflet + `leaflet.heat` + `react-leaflet`) to visualize air quality across locations
-- **Charts and trends** for historical/predicted data (Recharts)
-- **Contact/feedback form** (Formspree integration)
-- Clean, responsive UI built with Tailwind CSS and Lucide icons
+Rather than simply reporting current pollution levels, AirGuard provides predictive environmental intelligence that enables governments, healthcare providers, environmental agencies, researchers, media organizations, and communities to take proactive measures before pollution reaches hazardous levels.
 
-## Tech Stack
 
-**Backend**
-- [FastAPI](https://fastapi.tiangolo.com/) — API framework
-- [Uvicorn](https://www.uvicorn.org/) — ASGI server
-- [pandas](https://pandas.pydata.org/) — data processing
-- [scikit-learn](https://scikit-learn.org/) — machine learning model
-- [joblib](https://joblib.readthedocs.io/) — model serialization/loading
+## Why AirGuard Exists
 
-**Frontend**
-- [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
-- [Tailwind CSS 4](https://tailwindcss.com/)
-- [React Leaflet](https://react-leaflet.js.org/) + [Leaflet.heat](https://github.com/Leaflet/Leaflet.heat) — map & heatmap visualization
-- [Recharts](https://recharts.org/) — charts
-- [Lucide React](https://lucide.dev/) — icons
-- [Formspree](https://formspree.io/) — contact form handling
-- [oxlint](https://oxc.rs/docs/guide/usage/linter.html) — linting
+Air pollution is one of the world's most serious environmental and public health challenges.
 
-**Modeling**
-- `airguard.ipynb` — Jupyter notebook used for data exploration and/or model training
+Every day, millions of people are exposed to harmful pollutants released from transportation systems, industrial activities, waste burning, power generation, and other human activities.
 
-## Project Structure
+These pollutants contribute to:
 
-```
-airguard/
-├── backend/          # FastAPI application, ML model serving
-├── frontend/          # React + Vite web app
-└── airguard.ipynb     # Notebook for data analysis / model training
-```
+- Premature deaths
+- Asthma
+- Chronic respiratory diseases
+- Cardiovascular illnesses
+- Reduced life expectancy
+- Poor urban air quality
+- Climate change
+- Environmental degradation
 
-## Getting Started
+Although many cities have monitoring stations, most existing systems only report pollution after it has already occurred.
 
-### Prerequisites
+By the time dangerous pollution levels are detected, people have already been exposed.
 
-- Python 3.9+ and pip
-- Node.js 18+ and npm
+AirGuard was developed to change this.
 
-### Backend Setup
+Instead of reacting to pollution events, AirGuard predicts them before they happen, giving decision-makers time to respond.
 
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
 
-> Adjust `main:app` to match the actual module/app object name in the `backend/` directory if different.
+## The Problem
 
-The API will be available at `http://localhost:8000` by default. Interactive API docs are available at `http://localhost:8000/docs`.
+Traditional air quality monitoring systems focus primarily on measuring existing pollution levels.
 
-### Frontend Setup
+While these systems provide valuable information, they rarely answer one critical question:
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+> **What will happen tomorrow?**
 
-The app will be available at `http://localhost:5173` by default.
+Without reliable forecasting:
 
-### Building for Production
+- Governments struggle to implement timely environmental interventions.
+- Hospitals cannot adequately prepare for pollution-related health emergencies.
+- Researchers lack predictive environmental intelligence.
+- Communities receive warnings after exposure has already occurred.
+- Media organizations cannot provide forward-looking air quality advisories.
 
-```bash
-cd frontend
-npm run build
-npm run preview
-```
+Reactive monitoring alone is insufficient for protecting public health.
 
-## Notebook
 
-`airguard.ipynb` contains the data analysis and/or model training workflow used to produce the model consumed by the backend. Open it with Jupyter:
+## Our Solution
 
-```bash
-pip install notebook
-jupyter notebook airguard.ipynb
-```
+AirGuard transforms environmental monitoring from reactive observation into proactive decision support.
 
-## Environment Variables
+Using Machine Learning, the platform analyzes historical environmental, temporal, and geographical data to forecast future air pollutant concentrations.
 
-If the backend or frontend require configuration (API keys, data source URLs, Formspree form ID, etc.), document them here, e.g.:
+The prediction engine estimates multiple pollutants simultaneously before converting those predictions into practical recommendations for different stakeholders.
 
-```
-# frontend/.env
-VITE_API_BASE_URL=http://localhost:8000
-VITE_FORMSPREE_FORM_ID=your_form_id
-```
+This allows organizations to make informed decisions before pollution becomes hazardous.
 
-## Contributing
 
-Contributions are welcome. Please open an issue or submit a pull request.
 
-## License
+## What Makes AirGuard Different?
 
-Specify a license for this project (e.g. MIT) — none is currently declared in the repository.
+Unlike conventional monitoring systems, AirGuard:
+
+- Predicts pollution before it occurs.
+- Forecasts multiple pollutants simultaneously.
+- Generates stakeholder-specific recommendations.
+- Combines environmental intelligence with public health awareness.
+- Supports evidence-based environmental decision-making.
+- Bridges the gap between Machine Learning and environmental sustainability.
